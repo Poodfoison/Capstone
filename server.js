@@ -13,7 +13,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-let startingId = 0
 let users = [
     {
         id: "078b0e18dc77a8f597475916f645805f",
@@ -27,9 +26,9 @@ app.get('/', (req, res) => {
     res.send("Home");
 });
 
-app.get('/users/:id', (req, res) => {
+app.get('/users/:username', (req, res) => {
     console.log(req.params)
-    res.json(users[req.params.id])
+    res.json(users[req.params.username])
 })
 
 app.get('/data', logger, (req, res) => {
