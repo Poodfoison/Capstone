@@ -31,7 +31,7 @@ app.get('/', logger, (req, res) => {
 app.get('/users', async(req,res) =>{
     try {
         const data = await pool.query(`
-        SELECT * FROM login
+        SELECT * FROM logins
         `)
         res.json(data.rows)
     } catch (error) {
@@ -45,7 +45,7 @@ app.get('/users/:username', async (req, res) => {
         const username = req.params.username
 
         const user = await pool.query(`
-        SELECT * FROM login where username = $1
+        SELECT * FROM logins where username = $1
         `, [username])
         res.json(user.rows)
     } catch (error) {
@@ -63,11 +63,11 @@ app.post('/login', async (req, res) => {
 
         const { username, password } = req.body
 
-        const user = await pool.query(`SELECT * FROM login WHERE
+        const user = await pool.query(`SELECT * FROM logins WHERE
         username = $1`, [username])
 
         if (user.rows.length <= 0) {
-            res.status(401).send({msg:"User does not exists"})
+            res.status(401).send({msg:"Invalid User"})
         }
 
         const validPassword = await bcrypt.compare(password, user.rows[0].password)
@@ -99,7 +99,7 @@ app.post('/changepassword', auth, async(req, res) => {
 
    
         const updatePassword = await pool.query(`
-        UPDATE login 
+        UPDATE logins 
         SET password = $2
         WHERE id = $1
         RETURNING *
@@ -168,10 +168,8 @@ app.get('/account', auth, async(req,res) =>{
     try {
         
         const account = await pool.query(`
-        SELECT firstname, lastname, contact, email, block, lot, street, barangay, city, province  FROM login
-        INNER JOIN address
-        ON address.id = login.id
-        WHERE login.id = $1
+        SELECT firstname, lastname, contact, email, block, lot, street  FROM logins
+        WHERE logins.id = $1
         `,[req.users.id])
         res.json(account.rows)
 
@@ -183,24 +181,6 @@ app.get('/account', auth, async(req,res) =>{
 
 })     
 
-app.get('/address', auth, async(req,res) =>{
-    try {
-        
-        const account = await pool.query(`
-        SELECT block, lot, street, barangay, city, province  FROM address
-        INNER JOIN login
-        ON login.id = address.id
-        WHERE login.id = $1
-        `,[req.users.id])
-        res.json(account.rows)
-
-    } catch (error) {
-        console.log(error.message)
-
-
-        }
-
-})     
 
 app.get('/profile', auth, async (req, res) => {
     try {
@@ -217,14 +197,12 @@ app.get('/bill', auth, async (req, res) => {
 
 
         const account = await pool.query(`
-        SELECT transactionid, name, contact, email, block, lot, street, barangay, city, province, date, amount  FROM login
-        INNER JOIN address
-        ON address.id = login.id
-        INNER JOIN transaction
-        ON transaction.id = login.id
-        INNER JOIN bill
-        ON transaction.billid = bill.billid
-        WHERE login.id = $1
+        SELECT transactionid, name, contact, email, block, lot, street, date, amount  FROM logins
+        INNER JOIN transactions
+        ON transactions.id = logins.id
+        INNER JOIN bills
+        ON transactions.billid = bills.billid
+        WHERE logins.id = $1
         `,[req.users.id])
         res.json(account.rows)
 
@@ -245,6 +223,9 @@ app.post('/addbill', auth, async (req, res) => {
         const d = new Date();
         let newBillUID = uid()
 
+        let tid = Date.now();
+
+
         // current date
         let date = ("0" + d.getDate()).slice(-2);
 
@@ -257,14 +238,14 @@ app.post('/addbill', auth, async (req, res) => {
         let day = year + "-" + date + "-" + month;
 
         const newbill = await pool.query(`
-        INSERT INTO bill (billid, date, name, amount)
+        INSERT INTO bills (billid, date, name, amount)
         VALUES ($1, $2, $3, $4) RETURNING *
         `, [newBillUID, day, name, amount])
 
         const newTransaction = await pool.query(`
-        INSERT INTO transaction (transactionid, id, billid)
+        INSERT INTO transactions (transactionid, id, billid)
         VALUES ($1, $2, $3) RETURNING *
-        `, [uid(), req.users.id, newBillUID])
+        `, [tid, req.users.id, newBillUID])
         
         res.json(newbill.rows)
 
@@ -282,45 +263,23 @@ app.post('/addbill', auth, async (req, res) => {
 
 
 
-app.post('/updateaddress', auth, async(req, res) => {
 
-    try {
-        const {block, lot, street, barangay, city, province} = req.body
-
-         
-
-        const updateAddress = await pool.query(`
-        UPDATE address
-        SET (block, lot, street, barangay, city, province) = ($2, $3, $4, $5, $6, $7)
-        WHERE id = $1
-        RETURNING *
-        `, [req.users.id, block, lot, street, barangay, city, province ])
-        
-        res.json(updateAddress.rows)
-
-
-    } catch (error) {
-        console.log(error.message)
-        res.status(500).send(error.message)
-
-    }
-})
 
 app.post('/updatelogin', auth, async(req, res) => {
 
     try {
-        const {firstname, lastname, contact, email} = req.body
+        const {firstname, lastname, contact, email,block, lot, street} = req.body
 
          
 
-        const updateLogin = await pool.query(`
-        UPDATE login
-        Set (firstname, lastname, email, contact) = ($2, $3, $4, $5)
+        const updatelogins = await pool.query(`
+        UPDATE logins
+        Set (firstname, lastname, email, contact,block, lot, street) = ($2, $3, $4, $5, $6, $7, $8)
         WHERE id = $1
         RETURNING *
-        `, [req.users.id, firstname, lastname, email, contact ])
+        `, [req.users.id, firstname, lastname, email, contact,block, lot, street ])
         
-        res.json(updateLogin.rows)
+        res.json(updatelogins.rows)
 
 
     } catch (error) {
@@ -337,7 +296,7 @@ app.post('/addvisitor', auth, async (req, res) => {
          
 
         const visitors = await pool.query(`
-        INSERT INTO visitor (visitorid, id, firstname, lastname, contact, validid)
+        INSERT INTO visitors (visitorid, id, firstname, lastname, contact, validid)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *
         `, [uid(), req.users.id, firstname, lastname, contact, validid ])
         
@@ -358,7 +317,7 @@ app.post('/message', auth, async (req, res) => {
          
 
         const messageContact = await pool.query(`
-        INSERT INTO contact (concernid, name, email, contact, message)
+        INSERT INTO contacts (concernid, name, email, contact, message)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *
         `, [uid(), name, email, contact, message])
         
@@ -375,9 +334,9 @@ app.post('/message', auth, async (req, res) => {
 app.post('/register', async (req, res) => {
     try {
 
-        const {username,password,firstname,lastname,contact,email,block, lot, street, barangay, city, province} = req.body
+        const {username,password,firstname,lastname,contact,email,block, lot, street} = req.body
 
-        const user = await pool.query(`SELECT * FROM login WHERE
+        const user = await pool.query(`SELECT * FROM logins WHERE
         username = $1`, [username])
 
         if (user.rows.length > 0) {
@@ -393,18 +352,11 @@ app.post('/register', async (req, res) => {
         let newUID = uid()
    
         const newUser = await pool.query(`
-        INSERT INTO login (id, username, password, firstname, lastname, contact, email)
+        INSERT INTO logins (id, username, password, firstname, lastname, contact, email , block, lot, street)
         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *
-        `, [newUID, username, bcryptPassword, firstname, lastname, contact, email])
-
-        const newAddress = await pool.query(`
-        INSERT INTO address (addressid, block, lot, street, barangay, city, province,id)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *
-        `, [uid(), block, lot, street, barangay, city, province, newUID])
-        
-   
+        `, [newUID, username, bcryptPassword, firstname, lastname, contact, email , block, lot, street])
  
-        const token = generateJWT(newUser.rows[0],newAddress.rows[0])
+        const token = generateJWT(newUser.rows[0])
 
     res.json({ token })
     }
