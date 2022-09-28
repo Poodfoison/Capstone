@@ -3,7 +3,6 @@ import {  Container,Col, Row, Tabs, Tab, Button, ListGroup, Card  } from 'react-
 import { Bill } from './Bill';
 import { NavLogin } from './NavLogin';
 import { UpdateInfo } from "./UpdateInfo";
-import { UpdateAddress } from "./UpdateAddress";
 import { Visitor } from "./Visitor";
 import { Feed } from "./Feed";
 import bgimage from '../assets/bg1.jpg'
@@ -11,7 +10,6 @@ import bgimage from '../assets/bg1.jpg'
 const Dashboard = ({ setAuth }) => {
     const [account, setAccount] = useState([]);
     const [info, setInfo] = useState(false);
-    const [address, setAddress] = useState(false);
 
     const getProfile = async () => {
         try {
@@ -72,30 +70,24 @@ const Dashboard = ({ setAuth }) => {
         <Card style={{ width: '18rem'}} >
         <Container>
             <br/>
-        <Card.Title className="fw-bold">{accounts.firstname} {accounts.lastname}</Card.Title>
+        <Card.Title className="fw-bold text-capitalize">{accounts.firstname} {accounts.lastname}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted fw-bold">Email Address: {accounts.email}</Card.Subtitle>
         <Card.Text className="fw-bold">
         Contact No.: {accounts.contact}
         </Card.Text>
         </Container>
         <br/>
-        <Button variant="outline-success" onClick={() => setInfo(true)}>Update</Button>
+        
+      <Card.Header className="fw-bolder text-center fs-4">Address:</Card.Header>
+      <ListGroup variant="flush">
+        <ListGroup.Item className="fw-bold text-capitalize">Lot No.: {accounts.lot}</ListGroup.Item>
+        <ListGroup.Item className="fw-bold text-capitalize">Block No.: {accounts.block}</ListGroup.Item> 
+        <ListGroup.Item className="fw-bold text-capitalize">Street: {accounts.street}</ListGroup.Item>
+      </ListGroup>
+      <Button variant="outline-success" onClick={() => setInfo(true)}>Update</Button>
         <UpdateInfo
         show={info}
         onHide={() => setInfo(false)}/>
-      <Card.Header className="fw-bolder text-center fs-4">Address:</Card.Header>
-      <ListGroup variant="flush">
-        <ListGroup.Item className="fw-bold">Block No.: {accounts.block}</ListGroup.Item>
-        <ListGroup.Item className="fw-bold">Lot No.: {accounts.lot}</ListGroup.Item>
-        <ListGroup.Item className="fw-bold">Street: {accounts.street}</ListGroup.Item>
-        <ListGroup.Item className="fw-bold">Barangay: {accounts.barangay}</ListGroup.Item>
-        <ListGroup.Item className="fw-bold">City: {accounts.city}</ListGroup.Item>
-        <ListGroup.Item className="fw-bold">Province: {accounts.province}</ListGroup.Item>
-      </ListGroup>
-      <Button variant="outline-success" onClick={() => setAddress(true)}>Update</Button>
-      <UpdateAddress
-        show={address}
-        onHide={() => setAddress(false)}/>
     </Card>
     <br></br>
             <br></br>

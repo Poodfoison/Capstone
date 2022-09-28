@@ -52,7 +52,7 @@ export const Bill = ({ setAuth }
     <h1>Billing Dates:</h1>
     <Form.Select onChange={e=> setSelect(e.target.value)} placeholder=''>
     <option>Select Date: </option>
-    {bill.sort((a,b) => b.date.split('-').reverse().join().localeCompare(a.date.split('-').reverse().join())).map(bills => {
+    {bill.sort((a,b) => a.date.split('-').reverse().join().localeCompare(b.date.split('-').reverse().join())).map(bills => {
                 return <option key={bills.transactionid}>{bills.date}</option>
     })}
     </Form.Select>
@@ -72,7 +72,7 @@ export const Bill = ({ setAuth }
         <Card.Body className="mx-4">
         <Container>
 
-            <p className="my-5 text-center fs-3" style={{ fontSize: "30px" }}>
+            <p className="my-5 text-center fs-5">
               Monthly Bill
             </p>
             <Row>
@@ -112,7 +112,7 @@ export const Bill = ({ setAuth }
             </Row>
             <Row className="text-black">
               <Col xl="12">
-                <p className="float-end fw-bold">Total: Php {parseInt(billing.amount) + sec + misc}</p>
+                <p className="float-end fw-bolder fs-3">Total: ₱ {parseInt(billing.amount) + sec + misc}</p>
               </Col>
               <hr style={{ border: "2px solid black" }} />
             </Row>

@@ -13,10 +13,6 @@ const Register = () => {
         block: "",
         lot: "",
         street: "",
-        barangay: "",
-        city: "",
-        province: "",
-
 
     })
 
@@ -24,13 +20,13 @@ const Register = () => {
         setInputs({...inputs, [e.target.name] : e.target.value})
     }
 
-    const { username, password, firstname, lastname, contact, email,block, lot, street, barangay, city, province } = inputs
+    const { username, password, firstname, lastname, contact, email,block, lot, street } = inputs
 
     const onSubmitForm = async (e) => {
         e.preventDefault()
        
         try {
-            const body = {username, password, firstname, lastname, contact, email,block, lot, street, barangay, city, province}
+            const body = {username, password, firstname, lastname, contact, email,block, lot, street}
             
             const response = await fetch(
                 "http://localhost:8000/register",
@@ -153,17 +149,6 @@ const Register = () => {
               <label className="form-label" for="floatingPassword">Email Address:</label>
                 </div>
                 <h3>Address:</h3>
-                <div className="form-floating mb-3">
-                <input
-                    type="text"
-                    name="block"
-                    className="form-control"
-                    value={block}
-                    onChange={e => onChange(e)} 
-                    required/>
-                    
-              <label className="form-label" for="floatingPassword">Block No.:</label>
-                </div>
 
                 <div className="form-floating mb-3">
                 <input
@@ -176,6 +161,21 @@ const Register = () => {
               <label className="form-label" for="floatingPassword">Lot No.:</label>
                 </div>
 
+
+                <div className="form-floating mb-3">
+                <input
+                    type="text"
+                    name="block"
+                    className="form-control"
+                    value={block}
+                    onChange={e => onChange(e)} 
+                    required/>
+                    
+              <label className="form-label" for="floatingPassword">Block No.:</label>
+                </div>
+
+
+
                 <div className="form-floating mb-3">
                 <input
                     type="text"
@@ -187,37 +187,6 @@ const Register = () => {
               <label className="form-label" for="floatingPassword">Street:</label>
                 </div>
 
-                <div className="form-floating mb-3">
-                <input
-                    type="text"
-                    name="barangay"
-                    className="form-control"
-                    value={barangay}
-                    onChange={e => onChange(e)}
-                    required />
-              <label className="form-label" for="floatingPassword">Barangay:</label>
-                </div>
-
-                <div className="form-floating mb-3">
-                <input
-                    type="text"
-                    name="city"
-                    className="form-control"
-                    value={city}
-                    onChange={e => onChange(e)} />
-              <label className="form-label" for="floatingPassword">City:</label>
-                </div>
-
-                <div className="form-floating mb-3">
-                <input
-                    type="text"
-                    name="province"
-                    className="form-control"
-                    value={province}
-                    onChange={e => onChange(e)}
-                    required />
-              <label className="form-label" for="floatingPassword">Province:</label>
-                </div>
 
                 <button className="btn btn-outline-success btn-block mb-4 " >Submit</button>
             </form>
