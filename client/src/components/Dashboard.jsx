@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import {  Container,Col, Row, Tabs, Tab, Button, ListGroup, Card  } from 'react-bootstrap';
 import { Bill } from './Bill';
 import { NavLogin } from './NavLogin';
-import { UpdateInfo } from "./UpdateInfo";
 import { Visitor } from "./Visitor";
 import { Feed } from "./Feed";
+import { UpdateInfo } from "./UpdateInfo";
 import bgimage from '../assets/bg1.jpg'
 
 const Dashboard = ({ setAuth }) => {
@@ -60,15 +60,15 @@ const Dashboard = ({ setAuth }) => {
     }}>
        
             {account.map(accounts => {
-                return <div >
+                return <div key={accounts.id}>
                   <NavLogin  />
-                    <Container style={{ backgroundColor:`white`}} key={accounts.id}>
+                    <Container style={{ backgroundColor:`white`}} >
                     <Row >
     
         <Col md="auto">
 
         <Card style={{ width: '18rem'}} >
-        <Container>
+        <Container >
             <br/>
         <Card.Title className="fw-bold text-capitalize">{accounts.firstname} {accounts.lastname}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted fw-bold">Email Address: {accounts.email}</Card.Subtitle>
