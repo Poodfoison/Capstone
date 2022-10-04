@@ -57,6 +57,36 @@ app.get('/secret', logger, (req, res) => {
 res.status(403).end();
 })
 
+
+
+app.post('/passwordauth', auth, async (req, res) => {
+    try {
+
+
+        const { password } = req.body
+       
+
+        const user = await pool.query(`SELECT * FROM logins WHERE
+        id = $1`, [req.users.id])
+
+
+        const validPassword = await bcrypt.compare(password, user.rows[0].password)
+
+        if (!validPassword) {
+            return res.status(401).json({validity:false})
+            
+        }
+        
+        res.json({validity:true})
+
+    } catch (error) {
+        console.log(error.message)
+        }
+
+    });
+
+
+
 app.post('/login', async (req, res) => {
     try {
 
