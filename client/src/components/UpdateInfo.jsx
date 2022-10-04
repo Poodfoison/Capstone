@@ -25,7 +25,8 @@ export const UpdateInfo = (props,) => {
                   </Modal.Title>
                 </Modal.Header>
                 <Modal.Body >
-               <PasswordAuthForm/>
+                     <PasswordAuthForm/>
+               
                 </Modal.Body>
                 <Modal.Footer>
 

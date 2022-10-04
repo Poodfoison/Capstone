@@ -34,7 +34,7 @@ export const UpdateForm = ({setAuth}) => {
 
             }
             setInfo(data);
-            console.log(data)
+        
 
         } catch (error) {
             console.log(error.message)
