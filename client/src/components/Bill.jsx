@@ -14,7 +14,7 @@ export const Bill = ({ setAuth }
         try {
             //fetch api that uses the GET method
             const response = await fetch(
-                "http://localhost:8000/bill",
+                "https://capstone-project-stacktrek-svr.herokuapp.com/bill",
                 {
                     method: "GET",
                     //retrieving the token and putting it in the Auth header

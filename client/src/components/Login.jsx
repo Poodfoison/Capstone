@@ -49,7 +49,7 @@ const Login = ({ setAuth }) => {
 
             //fetch api for POST method
             const response = await fetch(
-                "http://localhost:8000/login",
+                "https://capstone-project-stacktrek-svr.herokuapp.com/login",
                 {
                     method: "POST",
                     headers: {

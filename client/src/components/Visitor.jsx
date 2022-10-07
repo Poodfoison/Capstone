@@ -33,7 +33,7 @@ export const Visitor = ({setAuth}) => {
               progress: undefined,
               });
             const response = await fetch(
-                "http://localhost:8000/addvisitor",
+                "https://capstone-project-stacktrek-svr.herokuapp.com/addvisitor",
                 {
                     method: "POST",
                     headers: {

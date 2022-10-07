@@ -25,12 +25,11 @@ export const Contact = () => {
             const body = {name, email, contact, message}
             
             const response = await fetch(
-                "http://localhost:8000/message",
+                "https://capstone-project-stacktrek-svr.herokuapp.com/message",
                 {
                     method: "POST",
                     headers: {
-                        "Content-type": "application/json",
-                        "Authorization": "Bearer " + localStorage.getItem('token') 
+                        "Content-type": "application/json", 
                     },
                     body: JSON.stringify(body)
                 }
@@ -38,9 +37,7 @@ export const Contact = () => {
             
             const parseRes = await response.json()
 
-            if(parseRes.token) {
-                //localstorage
-                localStorage.setItem("token", parseRes.token)
+            if(parseRes) {
                 toast.success('Message Sent Successfully', {
                   position: "top-center",
                   autoClose: 5000,
@@ -51,6 +48,15 @@ export const Contact = () => {
                   progress: undefined,
                   });
             } else {
+              toast.error('Message failed', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
                 
             }
           } catch (error) {
@@ -79,7 +85,7 @@ export const Contact = () => {
 <Card style={{ height: '390px'}}>
 <br/>
 <Container>
-<Form onSubmit={onSubmitForm}>
+<Form onSubmit={onSubmitForm.value}>
 <h4>Send us your Concerns</h4>
     <Form.Group  controlId="exampleForm.ControlInput1">
         <Form.Label className="fw-bold">Full Name:</Form.Label>

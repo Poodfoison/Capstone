@@ -12,7 +12,7 @@ export const UpdateForm = ({setAuth}) => {
         try {
             //fetch api that uses the GET method
             const response = await fetch(
-                "http://localhost:8000/account",
+                "https://capstone-project-stacktrek-svr.herokuapp.com/account",
                 {
                     method: "GET",
                     //retrieving the token and putting it in the Auth header

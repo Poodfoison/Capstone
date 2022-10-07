@@ -23,7 +23,7 @@ export const PasswordAuthForm = ({setAuth}) => {
             const body = {password}
             
             const response = await fetch(
-                "http://localhost:8000/passwordauth",
+                "https://capstone-project-stacktrek-svr.herokuapp.com/passwordauth",
                 {
                     method: "POST",
                     headers: {

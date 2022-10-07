@@ -29,7 +29,7 @@ const Register = () => {
             const body = {username, password, firstname, lastname, contact, email,block, lot, street}
             
             const response = await fetch(
-                "http://localhost:8000/register",
+                "https://capstone-project-stacktrek-svr.herokuapp.com/register",
                 {
                     method: "POST",
                     headers: {

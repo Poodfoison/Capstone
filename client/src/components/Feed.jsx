@@ -11,7 +11,7 @@ export const Feed = () => {
         try {
             //fetch api that uses the GET method
             const response = await fetch(
-                "http://localhost:8000/updates",
+                "https://capstone-project-stacktrek-svr.herokuapp.com/updates",
                 {
                     method: "GET",
                     //retrieving the token and putting it in the Auth header
