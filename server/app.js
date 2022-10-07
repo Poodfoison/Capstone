@@ -11,7 +11,7 @@ import cors from "cors"
 
 const app = express()
 const pool = connectDatabase()
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 
 const logger = (req, res, next) => {
     console.log(`request url: ${req.url} and request method: ${req.method} ${req.connection.remoteAddress}`)
@@ -73,7 +73,7 @@ app.post('/passwordauth', auth, async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.rows[0].password)
 
         if (!validPassword) {
-            return res.status(401).json({validity:false})
+            return res.json({validity:false})
             
         }
         
@@ -383,7 +383,7 @@ app.post('/register', async (req, res) => {
    
         const newUser = await pool.query(`
         INSERT INTO logins (id, username, password, firstname, lastname, contact, email , block, lot, street)
-        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *
+        VALUES ($1, $2, $3, $4, $5, $6, $7 , $8 , $9 , $10) RETURNING *
         `, [newUID, username, bcryptPassword, firstname, lastname, contact, email , block, lot, street])
  
         const token = generateJWT(newUser.rows[0])
